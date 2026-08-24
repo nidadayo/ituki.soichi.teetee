@@ -1,6 +1,6 @@
 // Supabase
 
-const SUPABASE_URL = "https://qzwlybbjojeynhoghmyz.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://qzwlybbjojeynhoghmyz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_aLU0ouME6VY_C-Yvc5SRYQ_GfSFbvmd";
 
 const supabase = window.supabase.createClient(
@@ -9,7 +9,7 @@ const supabase = window.supabase.createClient(
 );
 
 
-// Connection Test
+// Supabase Test
 
 async function testSupabase() {
   const { error } = await supabase
@@ -30,32 +30,41 @@ testSupabase();
 
 // Hamburger
 
-const hamburger = document.getElementById("hamburger");
-const nav = document.getElementById("nav");
+document.addEventListener("DOMContentLoaded", () => {
 
-hamburger.addEventListener("click", () => {
-  hamburger.classList.toggle("active");
-  nav.classList.toggle("active");
-});
+  const hamburger = document.getElementById("hamburger");
+  const nav = document.getElementById("nav");
 
-
-// Navigation
-
-const navLinks = document.querySelectorAll(".nav a");
-
-navLinks.forEach((link) => {
-  link.addEventListener("click", () => {
-    hamburger.classList.remove("active");
-    nav.classList.remove("active");
-  });
-});
-
-
-// ESC
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    hamburger.classList.remove("active");
-    nav.classList.remove("active");
+  if (!hamburger || !nav) {
+    console.error("Hamburger or navigation not found.");
+    return;
   }
+
+  hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("active");
+    nav.classList.toggle("active");
+  });
+
+
+  // Navigation
+
+  const navLinks = nav.querySelectorAll("a");
+
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      hamburger.classList.remove("active");
+      nav.classList.remove("active");
+    });
+  });
+
+
+  // ESC
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hamburger.classList.remove("active");
+      nav.classList.remove("active");
+    }
+  });
+
 });
