@@ -1,3 +1,13 @@
+// Supabase
+
+const SUPABASE_URL = "";
+const SUPABASE_KEY = "sb_publishable_aLU0ouME6VY_C-Yvc5SRYQ_GfSFbvmd";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 // Hamburger
 
 const hamburger = document.getElementById("hamburger");
