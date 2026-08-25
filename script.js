@@ -120,7 +120,6 @@ async function loadCases() {
   }
 
   if (!supabaseClient) {
-    console.error("Supabase client is not available.");
     return;
   }
 
@@ -135,14 +134,17 @@ async function loadCases() {
 
     if (error) {
 
-      console.error("Cases SELECT ERROR:", error);
+      console.error(
+        "Cases SELECT ERROR:",
+        error
+      );
 
       return;
     }
 
     caseList.innerHTML = "";
 
-    data.forEach((item, index) => {
+    for (const [index, item] of data.entries()) {
 
       const article = document.createElement("article");
 
@@ -164,6 +166,7 @@ async function loadCases() {
         <button
           class="case-like"
           data-case-id="${item.id}"
+          type="button"
         >
           ❤️ <span class="like-count">0</span>
         </button>
@@ -171,19 +174,102 @@ async function loadCases() {
 
       caseList.appendChild(article);
 
-    });
+      const button =
+        article.querySelector(".case-like");
 
-    console.log("Cases loaded:", data);
+      // Like count
+
+      await updateLikeCount(
+        item.id,
+        button
+      );
+
+      // Already liked
+
+      await checkLiked(
+        item.id,
+        button
+      );
+
+    }
 
   } catch (error) {
 
-    console.error("Cases ERROR:", error);
+    console.error(
+      "Cases ERROR:",
+      error
+    );
 
   }
 
 }
 
-loadCases();
+
+// Check Like
+
+async function checkLiked(caseId, button) {
+
+  const visitorId = getVisitorId();
+
+  const { data, error } = await supabaseClient
+    .from("likes")
+    .select("id")
+    .eq("case_id", caseId)
+    .eq("visitor_id", visitorId)
+    .maybeSingle();
+
+  if (error) {
+
+    console.error(
+      "Like CHECK ERROR:",
+      error
+    );
+
+    return;
+  }
+
+  if (data) {
+
+    button.classList.add("liked");
+
+  }
+
+}
+
+
+// Like Count
+
+async function updateLikeCount(caseId, button) {
+
+  const { count, error } = await supabaseClient
+    .from("likes")
+    .select("id", {
+      count: "exact",
+      head: true
+    })
+    .eq("case_id", caseId);
+
+  if (error) {
+
+    console.error(
+      "Like COUNT ERROR:",
+      error
+    );
+
+    return;
+  }
+
+  const countElement =
+    button.querySelector(".like-count");
+
+  if (countElement) {
+
+    countElement.textContent =
+      count ?? 0;
+
+  }
+
+}
 
 // Visitor ID
 
