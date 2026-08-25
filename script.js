@@ -665,3 +665,156 @@ async function loadRanking() {
 }
 
 loadRanking();
+
+// ==============================
+// Home Ranking
+// ==============================
+
+async function loadHomeRanking() {
+
+  const rankingList =
+    document.getElementById(
+      "homeRankingList"
+    );
+
+  if (!rankingList) {
+    return;
+  }
+
+  if (!supabaseClient) {
+    return;
+  }
+
+  try {
+
+    // Cases
+
+    const {
+      data: cases,
+      error: casesError
+    } = await supabaseClient
+      .from("cases")
+      .select("id, title");
+
+    if (casesError) {
+
+      console.error(
+        "HOME RANKING CASES ERROR:",
+        casesError
+      );
+
+      return;
+    }
+
+
+    // Likes
+
+    const {
+      data: likes,
+      error: likesError
+    } = await supabaseClient
+      .from("likes")
+      .select("case_id");
+
+    if (likesError) {
+
+      console.error(
+        "HOME RANKING LIKES ERROR:",
+        likesError
+      );
+
+      return;
+    }
+
+
+    // Count likes
+
+    const likeCounts = {};
+
+    likes.forEach((like) => {
+
+      if (!likeCounts[like.case_id]) {
+
+        likeCounts[like.case_id] = 0;
+
+      }
+
+      likeCounts[like.case_id]++;
+
+    });
+
+
+    // Sort
+
+    const ranking =
+      cases
+        .map((item) => {
+
+          return {
+            ...item,
+            likes:
+              likeCounts[item.id] || 0
+          };
+
+        })
+        .sort(
+          (a, b) =>
+            b.likes - a.likes
+        )
+        .slice(0, 3);
+
+
+    // Display
+
+    rankingList.innerHTML = "";
+
+    ranking.forEach(
+      (item, index) => {
+
+        const rankingItem =
+          document.createElement(
+            "div"
+          );
+
+        rankingItem.className =
+          "ranking-item";
+
+        rankingItem.innerHTML = `
+          <span class="rank">
+            ${String(index + 1).padStart(2, "0")}
+          </span>
+
+          <span class="rank-title">
+            ${item.title}
+          </span>
+
+          <span class="rank-like">
+            ❤️ ${item.likes}
+          </span>
+        `;
+
+        rankingList.appendChild(
+          rankingItem
+        );
+
+      }
+    );
+
+
+    console.log(
+      "HOME RANKING:",
+      ranking
+    );
+
+  } catch (error) {
+
+    console.error(
+      "HOME RANKING ERROR:",
+      error
+    );
+
+  }
+
+}
+
+loadHomeRanking();
