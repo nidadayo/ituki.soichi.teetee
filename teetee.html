@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>てぇてぇ | いつそいてぇてぇ</title>
+
   <meta
     name="description"
-    content="一樹とそいちのてぇてぇ事例を紹介します。"
+    content="一樹とそいちの「てぇてぇ」事例を紹介するページ。"
   >
 
   <link rel="stylesheet" href="style.css">
@@ -47,11 +48,35 @@
 
     <ul class="nav-list">
 
-      <li><a href="index.html">HOME</a></li>
-      <li><a href="about.html">ABOUT</a></li>
-      <li><a href="teetee.html">てぇてぇ</a></li>
-      <li><a href="ranking.html">RANKING</a></li>
-      <li><a href="request.html">てぇてぇ事例募集</a></li>
+      <li>
+        <a href="index.html">
+          HOME
+        </a>
+      </li>
+
+      <li>
+        <a href="about.html">
+          ABOUT
+        </a>
+      </li>
+
+      <li>
+        <a href="teetee.html">
+          てぇてぇ
+        </a>
+      </li>
+
+      <li>
+        <a href="ranking.html">
+          RANKING
+        </a>
+      </li>
+
+      <li>
+        <a href="request.html">
+          てぇてぇ事例募集
+        </a>
+      </li>
 
     </ul>
 
@@ -62,21 +87,23 @@
 
   <main>
 
+    <!-- Hero -->
+
     <section class="page-hero">
 
       <div class="section-inner">
 
         <p class="section-label">
-          TEE TEE
+          てぇてぇ
         </p>
 
-        <h1 class="page-title">
+        <h1 class="section-title">
           てぇてぇ事例
         </h1>
 
-        <p class="page-description">
-          「ここ、てぇてぇな……」を<br>
-          全力で集めました。
+        <p class="section-text">
+          一樹とそいちの「てぇてぇ」を
+          全力で集めています。
         </p>
 
       </div>
@@ -86,100 +113,16 @@
 
     <!-- Cases -->
 
-    <section class="section">
+    <section class="cases section">
 
       <div class="section-inner">
 
-        <div class="case-page-list">
+        <div
+          id="caseList"
+          class="case-list"
+        >
 
-          <article class="case-card">
-
-            <span class="case-number">
-              CASE 01
-            </span>
-
-            <h2>
-              ここがてぇてぇ
-            </h2>
-
-            <p>
-              一樹とそいちのてぇてぇエピソードが
-              ここに入ります。
-            </p>
-
-            <div class="case-card-bottom">
-
-              <span>
-                ❤️ 0
-              </span>
-
-              <span>
-                2026.08.25
-              </span>
-
-            </div>
-
-          </article>
-
-
-          <article class="case-card">
-
-            <span class="case-number">
-              CASE 02
-            </span>
-
-            <h2>
-              これもてぇてぇ
-            </h2>
-
-            <p>
-              二人の素敵なエピソードを
-              ここに掲載します。
-            </p>
-
-            <div class="case-card-bottom">
-
-              <span>
-                ❤️ 0
-              </span>
-
-              <span>
-                2026.08.25
-              </span>
-
-            </div>
-
-          </article>
-
-
-          <article class="case-card">
-
-            <span class="case-number">
-              CASE 03
-            </span>
-
-            <h2>
-              やっぱりてぇてぇ
-            </h2>
-
-            <p>
-              これは間違いなく
-              てぇてぇ。
-            </p>
-
-            <div class="case-card-bottom">
-
-              <span>
-                ❤️ 0
-              </span>
-
-              <span>
-                2026.08.25
-              </span>
-
-            </div>
-
-          </article>
+          <!-- Supabaseからここに表示 -->
 
         </div>
 
@@ -194,48 +137,35 @@
 
   <footer class="footer">
 
-<!-- Main -->
+    <div class="footer-inner">
 
-<main>
-
-  <!-- Hero -->
-
-  <section class="page-hero">
-
-    <div class="section-inner">
-
-      <p class="section-label">
-        TEETEE
+      <p class="footer-title">
+        いつそいてぇてぇ
       </p>
 
-      <h1 class="section-title">
-        てぇてぇ事例
-      </h1>
+      <!-- Visitor Counter -->
 
-      <p class="section-text">
-        一樹とそいちの「てぇてぇ」を
-        全力で集めています。
-      </p>
-
-    </div>
-
-  </section>
-
-
-  <!-- Cases -->
-
-  <section class="cases section">
-
-    <div class="section-inner">
-
-      <div id="caseList" class="case-list">
-
-        <!-- Supabaseからここに表示 -->
-
+      <div class="visitor-counter">
+        👀 <span id="visitorCount">---</span> visits
       </div>
 
+      <p class="footer-copy">
+        © 2026 いつそいてぇてぇ
+      </p>
+
     </div>
 
-  </section>
+  </footer>
 
-</main>
+
+  <!-- Supabase -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- JavaScript -->
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
