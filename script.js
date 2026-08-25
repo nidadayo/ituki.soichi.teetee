@@ -500,3 +500,168 @@ document.addEventListener(
 // Load Cases
 
 loadCases();
+
+// ==============================
+// Ranking
+// ==============================
+
+async function loadRanking() {
+
+  const rankingList =
+    document.getElementById("rankingList");
+
+  if (!rankingList) {
+    return;
+  }
+
+  if (!supabaseClient) {
+    return;
+  }
+
+  try {
+
+    // Cases
+
+    const {
+      data: cases,
+      error: casesError
+    } = await supabaseClient
+      .from("cases")
+      .select("id, title, content");
+
+    if (casesError) {
+
+      console.error(
+        "RANKING CASES ERROR:",
+        casesError
+      );
+
+      return;
+    }
+
+
+    // Likes
+
+    const {
+      data: likes,
+      error: likesError
+    } = await supabaseClient
+      .from("likes")
+      .select("case_id");
+
+    if (likesError) {
+
+      console.error(
+        "RANKING LIKES ERROR:",
+        likesError
+      );
+
+      return;
+    }
+
+
+    // Count likes
+
+    const likeCounts = {};
+
+    likes.forEach((like) => {
+
+      const caseId =
+        like.case_id;
+
+      if (!likeCounts[caseId]) {
+
+        likeCounts[caseId] = 0;
+
+      }
+
+      likeCounts[caseId]++;
+
+    });
+
+
+    // Sort
+
+    const ranking =
+      cases
+        .map((item) => {
+
+          return {
+            ...item,
+            likes:
+              likeCounts[item.id] || 0
+          };
+
+        })
+        .sort(
+          (a, b) =>
+            b.likes - a.likes
+        );
+
+
+    // Display
+
+    rankingList.innerHTML = "";
+
+    ranking.forEach(
+      (item, index) => {
+
+        const article =
+          document.createElement(
+            "article"
+          );
+
+        article.className =
+          "ranking-card";
+
+        article.innerHTML = `
+          <div class="ranking-number">
+            ${String(index + 1).padStart(2, "0")}
+          </div>
+
+          <div class="ranking-content">
+
+            <span class="ranking-case">
+              CASE ${String(item.id).padStart(2, "0")}
+            </span>
+
+            <h2>
+              ${item.title}
+            </h2>
+
+            <p>
+              ${item.content || ""}
+            </p>
+
+          </div>
+
+          <div class="ranking-like">
+            ❤️ ${item.likes}
+          </div>
+        `;
+
+        rankingList.appendChild(
+          article
+        );
+
+      }
+    );
+
+
+    console.log(
+      "RANKING:",
+      ranking
+    );
+
+  } catch (error) {
+
+    console.error(
+      "RANKING ERROR:",
+      error
+    );
+
+  }
+
+}
+
+loadRanking();
