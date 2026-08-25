@@ -1,12 +1,12 @@
-// Supabase Test
+// Supabase
 
 console.log("JS START");
 
-console.log("window.supabase =", window.supabase);
+const SUPABASE_URL =
+  "https://qzwlybbjojeynhoghmyz.supabase.co";
 
-const SUPABASE_URL = "https://qzwlybbjojeynhoghmyz.supabase.co";
-
-const SUPABASE_KEY = "sb_publishable_aLU0ouME6VY_C-Yvc5SRYQ_GfSFbvmd";
+const SUPABASE_KEY =
+  "sb_publishable_aLU0ouME6VY_C-Yvc5SRYQ_GfSFbvmd";
 
 let supabaseClient = null;
 
@@ -21,50 +21,65 @@ try {
 
 } catch (error) {
 
-  console.error("SUPABASE ERROR");
-  console.error(error);
+  console.error(
+    "SUPABASE ERROR:",
+    error
+  );
 
 }
 
 
 // Hamburger
 
-console.log("HAMBURGER START");
+const hamburger =
+  document.getElementById("hamburger");
 
-const hamburger = document.getElementById("hamburger");
-const nav = document.getElementById("nav");
-
-console.log("hamburger =", hamburger);
-console.log("nav =", nav);
+const nav =
+  document.getElementById("nav");
 
 if (hamburger && nav) {
 
-  hamburger.addEventListener("click", () => {
+  hamburger.addEventListener(
+    "click",
+    () => {
 
-    hamburger.classList.toggle("active");
-    nav.classList.toggle("active");
+      hamburger.classList.toggle(
+        "active"
+      );
 
-  });
+      nav.classList.toggle(
+        "active"
+      );
 
-  console.log("HAMBURGER OK");
+    }
+  );
 
 }
+
 
 // Visitor Counter
 
 async function updateVisitorCount() {
 
-  const counter = document.getElementById("visitorCount");
+  const counter =
+    document.getElementById(
+      "visitorCount"
+    );
 
   if (!counter) {
     return;
   }
 
-  console.log("Visitor counter START");
+  if (!supabaseClient) {
+    return;
+  }
 
   try {
 
-    const { data, error } = await supabaseClient
+    const {
+      data,
+      error
+    } = await supabaseClient
       .from("visitors")
       .select("count")
       .eq("id", 1)
@@ -72,16 +87,20 @@ async function updateVisitorCount() {
 
     if (error) {
 
-      console.error("Visitor SELECT ERROR:", error);
+      console.error(
+        "Visitor SELECT ERROR:",
+        error
+      );
 
       return;
     }
 
-    console.log("Current count:", data.count);
+    const newCount =
+      data.count + 1;
 
-    const newCount = data.count + 1;
-
-    const { error: updateError } = await supabaseClient
+    const {
+      error: updateError
+    } = await supabaseClient
       .from("visitors")
       .update({
         count: newCount
@@ -90,18 +109,23 @@ async function updateVisitorCount() {
 
     if (updateError) {
 
-      console.error("Visitor UPDATE ERROR:", updateError);
+      console.error(
+        "Visitor UPDATE ERROR:",
+        updateError
+      );
 
       return;
     }
 
-    counter.textContent = newCount.toLocaleString();
-
-    console.log("Visitor count updated:", newCount);
+    counter.textContent =
+      newCount.toLocaleString();
 
   } catch (error) {
 
-    console.error("Visitor counter ERROR:", error);
+    console.error(
+      "Visitor ERROR:",
+      error
+    );
 
   }
 
@@ -109,31 +133,60 @@ async function updateVisitorCount() {
 
 updateVisitorCount();
 
-// ==============================
+
+// Visitor ID
+
+function getVisitorId() {
+
+  let visitorId =
+    localStorage.getItem(
+      "visitor_id"
+    );
+
+  if (!visitorId) {
+
+    visitorId =
+      crypto.randomUUID();
+
+    localStorage.setItem(
+      "visitor_id",
+      visitorId
+    );
+
+  }
+
+  return visitorId;
+
+}
+
+
 // Cases
-// ==============================
 
 async function loadCases() {
 
-  const caseList = document.getElementById("caseList");
+  const caseList =
+    document.getElementById(
+      "caseList"
+    );
 
   if (!caseList) {
-    console.log("caseList not found");
     return;
   }
 
   if (!supabaseClient) {
-    console.error("Supabase client is not available.");
     return;
   }
 
-  console.log("Loading cases...");
-
   try {
 
-    const { data, error } = await supabaseClient
+    const {
+      data,
+      error
+    } = await supabaseClient
       .from("cases")
-      .select("id, title, content, created_at")
+      .select(
+        "id, title, content, created_at"
+      )
       .order("id", {
         ascending: true
       });
@@ -141,35 +194,21 @@ async function loadCases() {
     if (error) {
 
       console.error(
-        "CASES ERROR:",
+        "Cases SELECT ERROR:",
         error
       );
 
       return;
     }
 
-    console.log(
-      "CASES DATA:",
-      data
-    );
-
     caseList.innerHTML = "";
 
-    if (!data || data.length === 0) {
-
-      caseList.innerHTML = `
-        <p class="section-text">
-          まだてぇてぇ事例がありません。
-        </p>
-      `;
-
-      return;
-    }
-
-    data.forEach((item, index) => {
+    for (const [index, item] of data.entries()) {
 
       const article =
-        document.createElement("article");
+        document.createElement(
+          "article"
+        );
 
       article.className =
         "case-card";
@@ -184,7 +223,7 @@ async function loadCases() {
         </h2>
 
         <p class="case-content">
-          ${item.content || ""}
+          ${item.content}
         </p>
 
         <button
@@ -193,38 +232,25 @@ async function loadCases() {
           type="button"
         >
           ❤️
-          <span class="like-count">0</span>
+          <span class="like-count">
+            0
+          </span>
         </button>
       `;
 
-      caseList.appendChild(article);
+      caseList.appendChild(
+        article
+      );
 
-    });
-
-    console.log(
-      "Cases loaded successfully!"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "CASES EXCEPTION:",
-      error
-    );
-
-  }
-
-}
-
-loadCases();
-      // Like count
+      const button =
+        article.querySelector(
+          ".case-like"
+        );
 
       await updateLikeCount(
         item.id,
         button
       );
-
-      // Already liked
 
       await checkLiked(
         item.id,
@@ -247,11 +273,18 @@ loadCases();
 
 // Check Like
 
-async function checkLiked(caseId, button) {
+async function checkLiked(
+  caseId,
+  button
+) {
 
-  const visitorId = getVisitorId();
+  const visitorId =
+    getVisitorId();
 
-  const { data, error } = await supabaseClient
+  const {
+    data,
+    error
+  } = await supabaseClient
     .from("likes")
     .select("id")
     .eq("case_id", caseId)
@@ -270,88 +303,26 @@ async function checkLiked(caseId, button) {
 
   if (data) {
 
-    button.classList.add("liked");
+    button.classList.add(
+      "liked"
+    );
 
   }
 
 }
 
 
-// Like Count
+// Add / Remove Like
 
-async function updateLikeCount(caseId, button) {
+async function addLike(
+  caseId,
+  button
+) {
 
-  const { count, error } = await supabaseClient
-    .from("likes")
-    .select("id", {
-      count: "exact",
-      head: true
-    })
-    .eq("case_id", caseId);
-
-  if (error) {
-
-    console.error(
-      "Like COUNT ERROR:",
-      error
-    );
-
-    return;
-  }
-
-  const countElement =
-    button.querySelector(".like-count");
-
-  if (countElement) {
-
-    countElement.textContent =
-      count ?? 0;
-
-  }
-
-}
-
-// Visitor ID
-
-function getVisitorId() {
-
-  let visitorId = localStorage.getItem("visitor_id");
-
-  if (!visitorId) {
-
-    visitorId = crypto.randomUUID();
-
-    localStorage.setItem(
-      "visitor_id",
-      visitorId
-    );
-
-  }
-
-  return visitorId;
-
-}
-
-
-// Like
-
-async function addLike(caseId, button) {
-
-  if (!supabaseClient) {
-
-    console.error(
-      "Supabase client is not available."
-    );
-
-    return;
-
-  }
-
-  const visitorId = getVisitorId();
+  const visitorId =
+    getVisitorId();
 
   try {
-
-    // Already liked?
 
     const {
       data: existingLike,
@@ -371,19 +342,22 @@ async function addLike(caseId, button) {
       );
 
       return;
-
     }
 
 
-    // Remove like
+    // Remove Like
 
     if (existingLike) {
 
-      const { error } =
-        await supabaseClient
-          .from("likes")
-          .delete()
-          .eq("id", existingLike.id);
+      const {
+        error
+      } = await supabaseClient
+        .from("likes")
+        .delete()
+        .eq(
+          "id",
+          existingLike.id
+        );
 
       if (error) {
 
@@ -393,43 +367,43 @@ async function addLike(caseId, button) {
         );
 
         return;
-
       }
 
-      button.classList.remove("liked");
-
-      await updateLikeCount(
-        caseId,
-        button
+      button.classList.remove(
+        "liked"
       );
-
-      return;
 
     }
 
 
-    // Add like
+    // Add Like
 
-    const { error } =
-      await supabaseClient
+    else {
+
+      const {
+        error
+      } = await supabaseClient
         .from("likes")
         .insert({
           case_id: caseId,
           visitor_id: visitorId
         });
 
-    if (error) {
+      if (error) {
 
-      console.error(
-        "Like INSERT ERROR:",
-        error
+        console.error(
+          "Like INSERT ERROR:",
+          error
+        );
+
+        return;
+      }
+
+      button.classList.add(
+        "liked"
       );
 
-      return;
-
     }
-
-    button.classList.add("liked");
 
     await updateLikeCount(
       caseId,
@@ -464,7 +438,10 @@ async function updateLikeCount(
       count: "exact",
       head: true
     })
-    .eq("case_id", caseId);
+    .eq(
+      "case_id",
+      caseId
+    );
 
   if (error) {
 
@@ -474,7 +451,6 @@ async function updateLikeCount(
     );
 
     return;
-
   }
 
   const countElement =
@@ -519,3 +495,8 @@ document.addEventListener(
 
   }
 );
+
+
+// Load Cases
+
+loadCases();
