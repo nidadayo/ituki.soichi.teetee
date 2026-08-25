@@ -108,3 +108,69 @@ async function updateVisitorCount() {
 }
 
 updateVisitorCount();
+
+// Cases
+
+async function loadCases() {
+
+  const caseList = document.getElementById("caseList");
+
+  if (!caseList) {
+    return;
+  }
+
+  console.log("Cases loading...");
+
+  try {
+
+    const { data, error } = await supabaseClient
+      .from("cases")
+      .select("id, title, content, created_at")
+      .order("id", {
+        ascending: true
+      });
+
+    if (error) {
+
+      console.error("Cases SELECT ERROR:", error);
+
+      return;
+    }
+
+    console.log("Cases:", data);
+
+    caseList.innerHTML = "";
+
+    data.forEach((item, index) => {
+
+      const article = document.createElement("article");
+
+      article.className = "case-card";
+
+      article.innerHTML = `
+        <span class="case-number">
+          CASE ${String(index + 1).padStart(2, "0")}
+        </span>
+
+        <h2 class="case-title">
+          ${item.title}
+        </h2>
+
+        <p class="case-content">
+          ${item.content}
+        </p>
+      `;
+
+      caseList.appendChild(article);
+
+    });
+
+  } catch (error) {
+
+    console.error("Cases ERROR:", error);
+
+  }
+
+}
+
+loadCases();
