@@ -1133,3 +1133,16 @@ main {
   }
 
 }
+
+/* Visitor Counter */
+
+.visitor-counter {
+  margin-top: 10px;
+
+  color: #a1a1a6;
+
+  font-size: 11px;
+  letter-spacing: 0.03em;
+
+  opacity: 0.8;
+    }
