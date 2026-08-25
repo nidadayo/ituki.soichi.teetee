@@ -1146,3 +1146,51 @@ main {
 
   opacity: 0.8;
     }
+
+/* Cases */
+
+.case-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.case-card {
+  padding: 28px;
+
+  background: #fff;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+}
+
+.case-number {
+  display: block;
+
+  margin-bottom: 12px;
+
+  color: #0080ff;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+.case-title {
+  margin: 0 0 12px;
+
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.case-content {
+  margin: 0;
+
+  color: #6e6e73;
+
+  font-size: 14px;
+  line-height: 1.8;
+}
