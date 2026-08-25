@@ -49,3 +49,62 @@ if (hamburger && nav) {
   console.log("HAMBURGER OK");
 
 }
+
+// Visitor Counter
+
+async function updateVisitorCount() {
+
+  const counter = document.getElementById("visitorCount");
+
+  if (!counter) {
+    return;
+  }
+
+  console.log("Visitor counter START");
+
+  try {
+
+    const { data, error } = await supabaseClient
+      .from("visitors")
+      .select("count")
+      .eq("id", 1)
+      .single();
+
+    if (error) {
+
+      console.error("Visitor SELECT ERROR:", error);
+
+      return;
+    }
+
+    console.log("Current count:", data.count);
+
+    const newCount = data.count + 1;
+
+    const { error: updateError } = await supabaseClient
+      .from("visitors")
+      .update({
+        count: newCount
+      })
+      .eq("id", 1);
+
+    if (updateError) {
+
+      console.error("Visitor UPDATE ERROR:", updateError);
+
+      return;
+    }
+
+    counter.textContent = newCount.toLocaleString();
+
+    console.log("Visitor count updated:", newCount);
+
+  } catch (error) {
+
+    console.error("Visitor counter ERROR:", error);
+
+  }
+
+}
+
+updateVisitorCount();
