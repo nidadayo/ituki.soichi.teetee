@@ -184,3 +184,212 @@ async function loadCases() {
 }
 
 loadCases();
+
+// Visitor ID
+
+function getVisitorId() {
+
+  let visitorId = localStorage.getItem("visitor_id");
+
+  if (!visitorId) {
+
+    visitorId = crypto.randomUUID();
+
+    localStorage.setItem(
+      "visitor_id",
+      visitorId
+    );
+
+  }
+
+  return visitorId;
+
+}
+
+
+// Like
+
+async function addLike(caseId, button) {
+
+  if (!supabaseClient) {
+
+    console.error(
+      "Supabase client is not available."
+    );
+
+    return;
+
+  }
+
+  const visitorId = getVisitorId();
+
+  try {
+
+    // Already liked?
+
+    const {
+      data: existingLike,
+      error: checkError
+    } = await supabaseClient
+      .from("likes")
+      .select("id")
+      .eq("case_id", caseId)
+      .eq("visitor_id", visitorId)
+      .maybeSingle();
+
+    if (checkError) {
+
+      console.error(
+        "Like CHECK ERROR:",
+        checkError
+      );
+
+      return;
+
+    }
+
+
+    // Remove like
+
+    if (existingLike) {
+
+      const { error } =
+        await supabaseClient
+          .from("likes")
+          .delete()
+          .eq("id", existingLike.id);
+
+      if (error) {
+
+        console.error(
+          "Like DELETE ERROR:",
+          error
+        );
+
+        return;
+
+      }
+
+      button.classList.remove("liked");
+
+      await updateLikeCount(
+        caseId,
+        button
+      );
+
+      return;
+
+    }
+
+
+    // Add like
+
+    const { error } =
+      await supabaseClient
+        .from("likes")
+        .insert({
+          case_id: caseId,
+          visitor_id: visitorId
+        });
+
+    if (error) {
+
+      console.error(
+        "Like INSERT ERROR:",
+        error
+      );
+
+      return;
+
+    }
+
+    button.classList.add("liked");
+
+    await updateLikeCount(
+      caseId,
+      button
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Like ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+// Like Count
+
+async function updateLikeCount(
+  caseId,
+  button
+) {
+
+  const {
+    count,
+    error
+  } = await supabaseClient
+    .from("likes")
+    .select("*", {
+      count: "exact",
+      head: true
+    })
+    .eq("case_id", caseId);
+
+  if (error) {
+
+    console.error(
+      "Like COUNT ERROR:",
+      error
+    );
+
+    return;
+
+  }
+
+  const countElement =
+    button.querySelector(
+      ".like-count"
+    );
+
+  if (countElement) {
+
+    countElement.textContent =
+      count ?? 0;
+
+  }
+
+}
+
+
+// Like Buttons
+
+document.addEventListener(
+  "click",
+  (event) => {
+
+    const button =
+      event.target.closest(
+        ".case-like"
+      );
+
+    if (!button) {
+      return;
+    }
+
+    const caseId =
+      Number(
+        button.dataset.caseId
+      );
+
+    addLike(
+      caseId,
+      button
+    );
+
+  }
+);
