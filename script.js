@@ -109,19 +109,25 @@ async function updateVisitorCount() {
 
 updateVisitorCount();
 
+// ==============================
 // Cases
+// ==============================
 
 async function loadCases() {
 
   const caseList = document.getElementById("caseList");
 
   if (!caseList) {
+    console.log("caseList not found");
     return;
   }
 
   if (!supabaseClient) {
+    console.error("Supabase client is not available.");
     return;
   }
+
+  console.log("Loading cases...");
 
   try {
 
@@ -135,20 +141,38 @@ async function loadCases() {
     if (error) {
 
       console.error(
-        "Cases SELECT ERROR:",
+        "CASES ERROR:",
         error
       );
 
       return;
     }
 
+    console.log(
+      "CASES DATA:",
+      data
+    );
+
     caseList.innerHTML = "";
 
-    for (const [index, item] of data.entries()) {
+    if (!data || data.length === 0) {
 
-      const article = document.createElement("article");
+      caseList.innerHTML = `
+        <p class="section-text">
+          まだてぇてぇ事例がありません。
+        </p>
+      `;
 
-      article.className = "case-card";
+      return;
+    }
+
+    data.forEach((item, index) => {
+
+      const article =
+        document.createElement("article");
+
+      article.className =
+        "case-card";
 
       article.innerHTML = `
         <span class="case-number">
@@ -160,7 +184,7 @@ async function loadCases() {
         </h2>
 
         <p class="case-content">
-          ${item.content}
+          ${item.content || ""}
         </p>
 
         <button
@@ -168,15 +192,31 @@ async function loadCases() {
           data-case-id="${item.id}"
           type="button"
         >
-          ❤️ <span class="like-count">0</span>
+          ❤️
+          <span class="like-count">0</span>
         </button>
       `;
 
       caseList.appendChild(article);
 
-      const button =
-        article.querySelector(".case-like");
+    });
 
+    console.log(
+      "Cases loaded successfully!"
+    );
+
+  } catch (error) {
+
+    console.error(
+      "CASES EXCEPTION:",
+      error
+    );
+
+  }
+
+}
+
+loadCases();
       // Like count
 
       await updateLikeCount(
