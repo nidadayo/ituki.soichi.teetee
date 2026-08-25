@@ -7,6 +7,11 @@
 
   <title>RANKING | いつそいてぇてぇ</title>
 
+  <meta
+    name="description"
+    content="一樹とそいちのてぇてぇランキング。"
+  >
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -43,11 +48,35 @@
 
     <ul class="nav-list">
 
-      <li><a href="index.html">HOME</a></li>
-      <li><a href="about.html">ABOUT</a></li>
-      <li><a href="teetee.html">てぇてぇ</a></li>
-      <li><a href="ranking.html">RANKING</a></li>
-      <li><a href="request.html">てぇてぇ事例募集</a></li>
+      <li>
+        <a href="index.html">
+          HOME
+        </a>
+      </li>
+
+      <li>
+        <a href="about.html">
+          ABOUT
+        </a>
+      </li>
+
+      <li>
+        <a href="teetee.html">
+          てぇてぇ
+        </a>
+      </li>
+
+      <li>
+        <a href="ranking.html">
+          RANKING
+        </a>
+      </li>
+
+      <li>
+        <a href="request.html">
+          てぇてぇ事例募集
+        </a>
+      </li>
 
     </ul>
 
@@ -58,6 +87,8 @@
 
   <main>
 
+    <!-- Hero -->
+
     <section class="page-hero">
 
       <div class="section-inner">
@@ -66,13 +97,13 @@
           RANKING
         </p>
 
-        <h1 class="page-title">
+        <h1 class="section-title">
           てぇてぇランキング
         </h1>
 
-        <p class="page-description">
-          みんなが選んだ<br>
-          最強のてぇてぇ。
+        <p class="section-text">
+          みんなが「てぇてぇ！」と思った
+          事例をランキング。
         </p>
 
       </div>
@@ -82,85 +113,16 @@
 
     <!-- Ranking -->
 
-    <section class="section">
+    <section class="ranking section">
 
       <div class="section-inner">
 
-        <div class="ranking-page-list">
+        <div
+          id="rankingList"
+          class="ranking-list"
+        >
 
-          <article class="ranking-card">
-
-            <div class="ranking-number">
-              01
-            </div>
-
-            <div class="ranking-content">
-
-              <span>
-                CASE 01
-              </span>
-
-              <h2>
-                ここがてぇてぇ
-              </h2>
-
-            </div>
-
-            <div class="ranking-likes">
-              ❤️ 0
-            </div>
-
-          </article>
-
-
-          <article class="ranking-card">
-
-            <div class="ranking-number">
-              02
-            </div>
-
-            <div class="ranking-content">
-
-              <span>
-                CASE 02
-              </span>
-
-              <h2>
-                これもてぇてぇ
-              </h2>
-
-            </div>
-
-            <div class="ranking-likes">
-              ❤️ 0
-            </div>
-
-          </article>
-
-
-          <article class="ranking-card">
-
-            <div class="ranking-number">
-              03
-            </div>
-
-            <div class="ranking-content">
-
-              <span>
-                CASE 03
-              </span>
-
-              <h2>
-                やっぱりてぇてぇ
-              </h2>
-
-            </div>
-
-            <div class="ranking-likes">
-              ❤️ 0
-            </div>
-
-          </article>
+          <!-- Supabaseから表示 -->
 
         </div>
 
@@ -181,6 +143,10 @@
         いつそいてぇてぇ
       </p>
 
+      <div class="visitor-counter">
+        👀 <span id="visitorCount">---</span> visits
+      </div>
+
       <p class="footer-copy">
         © 2026 いつそいてぇてぇ
       </p>
@@ -190,9 +156,14 @@
   </footer>
 
 
+  <!-- Supabase -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <!-- JavaScript -->
 
   <script src="script.js"></script>
 
 </body>
+
 </html>
