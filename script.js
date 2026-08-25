@@ -119,7 +119,10 @@ async function loadCases() {
     return;
   }
 
-  console.log("Cases loading...");
+  if (!supabaseClient) {
+    console.error("Supabase client is not available.");
+    return;
+  }
 
   try {
 
@@ -136,8 +139,6 @@ async function loadCases() {
 
       return;
     }
-
-    console.log("Cases:", data);
 
     caseList.innerHTML = "";
 
@@ -159,11 +160,20 @@ async function loadCases() {
         <p class="case-content">
           ${item.content}
         </p>
+
+        <button
+          class="case-like"
+          data-case-id="${item.id}"
+        >
+          ❤️ <span class="like-count">0</span>
+        </button>
       `;
 
       caseList.appendChild(article);
 
     });
+
+    console.log("Cases loaded:", data);
 
   } catch (error) {
 
