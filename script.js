@@ -818,3 +818,104 @@ async function loadHomeRanking() {
 }
 
 loadHomeRanking();
+
+// ==============================
+// Latest Cases
+// ==============================
+
+async function loadLatestCases() {
+
+  const latestList =
+    document.getElementById(
+      "popularCaseList"
+    );
+
+  if (!latestList) {
+    return;
+  }
+
+  if (!supabaseClient) {
+    return;
+  }
+
+  try {
+
+    const {
+      data: cases,
+      error
+    } = await supabaseClient
+      .from("cases")
+      .select(
+        "id, title, content, created_at"
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      )
+      .limit(3);
+
+    if (error) {
+
+      console.error(
+        "LATEST CASES ERROR:",
+        error
+      );
+
+      return;
+    }
+
+    latestList.innerHTML = "";
+
+    cases.forEach((item) => {
+
+      const article =
+        document.createElement(
+          "article"
+        );
+
+      article.className =
+        "case-preview";
+
+      article.innerHTML = `
+        <span class="case-number">
+          CASE ${String(item.id).padStart(2, "0")}
+        </span>
+
+        <h3>
+          ${item.title}
+        </h3>
+
+        <p>
+          ${item.content || ""}
+        </p>
+
+        <div class="case-like">
+          NEW
+        </div>
+      `;
+
+      latestList.appendChild(
+        article
+      );
+
+    });
+
+    console.log(
+      "LATEST CASES:",
+      cases
+    );
+
+  } catch (error) {
+
+    console.error(
+      "LATEST CASES ERROR:",
+      error
+    );
+
+  }
+
+}
+
+loadLatestCases();
